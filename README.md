@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ankit Singh — Developer Portfolio
 
-## Getting Started
+A premium, modern developer portfolio built with Next.js 16, TypeScript, Tailwind CSS v4, and Framer Motion. Inspired by Linear, Vercel, Raycast, and Stripe.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Dark futuristic UI** with glassmorphism and gradient accents
+- **Framer Motion animations** — scroll-triggered, stagger, spring physics
+- **Custom cursor** with spring-based mouse tracking
+- **Typing effect** cycling through roles
+- **Mouse-follow glow** in the hero section
+- **Animated contribution graph** and LeetCode stats
+- **Bento grid projects** with expandable modals
+- **Animated timeline** for experience
+- **Contact form** with validation and success animation
+- **Scroll progress bar**
+- **Fully responsive** — mobile, tablet, desktop, ultra-wide
+- **SEO optimized** — metadata, OpenGraph, sitemap, robots.txt
+- **Vercel-ready** deployment
+
+## 🛠 Tech Stack
+
+| Technology | Version | Purpose |
+|---|---|---|
+| Next.js | 16 (App Router) | Framework |
+| TypeScript | 5 | Type safety |
+| Tailwind CSS | v4 | Styling |
+| Framer Motion | latest | Animations |
+| Lucide React | latest | Icons |
+
+## 📁 Folder Structure
+
+```
+src/
+├── app/                  # Next.js App Router
+│   ├── layout.tsx        # Root layout with SEO metadata
+│   ├── page.tsx          # Main page (assembles sections)
+│   ├── sitemap.ts        # Auto-generated sitemap
+│   └── robots.ts         # Robots.txt
+├── components/
+│   ├── layout/           # Navbar, Footer, CustomCursor, ScrollProgress
+│   └── ui/               # Button, Badge, GlowCard, SectionHeader, SocialIcons
+├── sections/             # Full-page sections
+│   ├── HeroSection.tsx
+│   ├── AboutSection.tsx
+│   ├── SkillsSection.tsx
+│   ├── ProjectsSection.tsx
+│   ├── ExperienceSection.tsx
+│   ├── StatsSection.tsx
+│   ├── AchievementsSection.tsx
+│   └── ContactSection.tsx
+├── hooks/                # Custom React hooks
+│   ├── useMousePosition.ts
+│   ├── useScrollProgress.ts
+│   ├── useTypingEffect.ts
+│   └── useCounter.ts
+├── animations/
+│   └── variants.ts       # Reusable Framer Motion variants
+├── data/
+│   └── index.ts          # All portfolio content (projects, skills, etc.)
+├── types/
+│   └── index.ts          # TypeScript interfaces
+├── lib/
+│   └── utils.ts          # Utility functions (cn, scrollToSection, etc.)
+└── styles/
+    └── globals.css       # Global styles, Tailwind theme, animations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18+
+- npm or yarn
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Clone or download the project
+cd portfolio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Install dependencies
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Start development server
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Build for Production
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm start
+```
+
+## 🎨 Customization
+
+### Update Personal Info
+
+Edit `src/data/index.ts` to update:
+- Projects
+- Skills
+- Experience
+- Achievements
+- Stats
+
+### Update Colors
+
+Edit the `@theme` block in `src/styles/globals.css`:
+
+```css
+@theme {
+  --color-primary: #7C3AED;   /* Purple */
+  --color-accent: #06B6D4;    /* Cyan */
+  --color-background: #030712; /* Dark */
+}
+```
+
+### Update SEO
+
+Edit `src/app/layout.tsx` to update metadata, OpenGraph, and Twitter card info.
+
+### Add Resume
+
+Place your resume PDF at `public/resume.pdf`.
+
+### Add OG Image
+
+Place your OpenGraph image at `public/og-image.png` (1200×630px recommended).
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+Or connect your GitHub repo to [vercel.com](https://vercel.com) for automatic deployments.
+
+### Environment Variables
+
+No environment variables required for the base setup. If you add a contact form backend, add:
+
+```env
+NEXT_PUBLIC_CONTACT_API_URL=your_api_url
+```
+
+## 📄 License
+
+MIT — free to use and modify for personal portfolios.
