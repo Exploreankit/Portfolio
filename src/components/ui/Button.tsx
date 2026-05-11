@@ -19,15 +19,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white hover:bg-violet-500 shadow-glow-sm hover:shadow-glow-primary",
+    "bg-gradient-to-r from-violet-600 to-violet-500 text-white hover:from-violet-500 hover:to-cyan-500 shadow-[0_0_20px_rgba(124,58,237,0.25)] hover:shadow-[0_0_30px_rgba(124,58,237,0.45)] hover:scale-[1.02]",
   secondary:
-    "glass text-foreground hover:bg-white/10 border border-white/10",
+    "glass text-foreground hover:bg-white/[0.08] border border-white/[0.12] hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]",
   ghost:
-    "text-foreground/70 hover:text-foreground hover:bg-white/5",
+    "text-foreground/60 hover:text-foreground hover:bg-white/[0.05]",
   outline:
-    "border border-primary/50 text-primary hover:bg-primary/10 hover:border-primary",
+    "border border-primary/40 text-primary/90 hover:bg-primary/10 hover:border-primary hover:shadow-[0_0_16px_rgba(124,58,237,0.2)]",
   accent:
-    "bg-accent text-background hover:bg-cyan-400 shadow-glow-accent",
+    "bg-gradient-to-r from-cyan-500 to-cyan-400 text-background hover:from-cyan-400 hover:to-violet-500 shadow-[0_0_20px_rgba(6,182,212,0.25)] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

@@ -11,19 +11,18 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ankitsingh.dev"),
-  title: "Ankit Singh — Full Stack Developer & Backend Engineer",
+  title: "Ankit Singh — Software Engineer",
   description:
-    "Full Stack Developer specializing in Node.js, NestJS, MERN Stack, REST APIs, authentication systems, scalable backend systems, and AI-integrated applications.",
+    "Software Engineer building scalable applications, intelligent systems, and modern digital experiences. Full-stack, product-focused, and AI-curious.",
   keywords: [
     "Ankit Singh",
+    "Software Engineer",
     "Full Stack Developer",
-    "Backend Engineer",
-    "Node.js Developer",
-    "NestJS",
-    "MERN Stack",
+    "Scalable Systems",
     "React Developer",
     "TypeScript",
     "AI Developer",
+    "Product Engineer",
     "Portfolio",
   ],
   authors: [{ name: "Ankit Singh" }],
@@ -32,9 +31,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://ankitsingh.dev",
-    title: "Ankit Singh — Full Stack Developer & Backend Engineer",
+    title: "Ankit Singh — Software Engineer",
     description:
-      "Full Stack Developer specializing in Node.js, NestJS, MERN Stack, and AI-integrated applications.",
+      "Software Engineer building scalable applications, intelligent systems, and modern digital experiences.",
     siteName: "Ankit Singh Portfolio",
     images: [
       {
@@ -47,8 +46,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ankit Singh — Full Stack Developer",
-    description: "Full Stack Developer specializing in Node.js, NestJS, and MERN Stack.",
+    title: "Ankit Singh — Software Engineer",
+    description: "Software Engineer building scalable applications, intelligent systems, and modern digital experiences.",
     images: ["/og-image.png"],
   },
   robots: {

@@ -2,194 +2,321 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, X, ChevronRight, Zap } from "lucide-react";
+import { ExternalLink, X, Zap } from "lucide-react";
 import { GithubIcon } from "@/components/ui/SocialIcons";
 import { projects } from "@/data";
 import type { Project } from "@/types";
-import { staggerContainer, fadeInUp, scaleIn } from "@/animations/variants";
 import SectionHeader from "@/components/ui/SectionHeader";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 
-/**
- * Individual project card in the bento grid
- */
+// ── Project Card ──────────────────────────────────────────────
 function ProjectCard({
   project,
   onOpen,
-  featured,
 }: {
   project: Project;
   onOpen: (p: Project) => void;
-  featured?: boolean;
 }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <motion.div
-      variants={fadeInUp}
-      className={`group relative glass rounded-2xl border border-white/06 overflow-hidden cursor-pointer
-        hover:border-white/14 transition-all duration-300 project-card
-        ${featured ? "lg:col-span-2" : ""}`}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       onClick={() => onOpen(project)}
-      whileHover={{ y: -4 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: "relative",
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        borderRadius: "16px",
+        border: hovered ? "1px solid rgba(124,58,237,0.35)" : "1px solid rgba(255,255,255,0.07)",
+        overflow: "hidden",
+        cursor: "pointer",
+        transition: "border-color 0.3s ease, transform 0.3s ease",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
       {/* Gradient header */}
-      <div className={`h-40 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-6xl font-black text-white/5 select-none">
-            {project.title.charAt(0)}
-          </div>
-        </div>
-        {/* Animated grid */}
+      <div
+        style={{
+          height: "140px",
+          background: `linear-gradient(135deg, ${project.gradient.includes("violet") ? "rgba(124,58,237,0.25)" : project.gradient.includes("cyan") ? "rgba(6,182,212,0.25)" : project.gradient.includes("emerald") ? "rgba(16,185,129,0.25)" : "rgba(236,72,153,0.25)"}, rgba(0,0,0,0.1))`,
+          position: "relative",
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
+        {/* Big letter watermark */}
         <div
-          className="absolute inset-0 opacity-20"
           style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "80px",
+            fontWeight: 900,
+            color: "rgba(255,255,255,0.04)",
+            userSelect: "none",
+            letterSpacing: "-4px",
+          }}
+        >
+          {project.title.charAt(0)}
+        </div>
+        {/* Grid overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0.15,
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
             backgroundSize: "20px 20px",
           }}
         />
         {/* Status badge */}
-        <div className="absolute top-3 right-3">
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium border
-            ${project.status === "live"
-              ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-              : "bg-amber-500/20 text-amber-300 border-amber-500/30"
-            }`}>
-            {project.status === "live" ? "● Live" : "⚡ WIP"}
+        <div style={{ position: "absolute", top: "12px", right: "12px" }}>
+          <span
+            style={{
+              padding: "3px 10px",
+              borderRadius: "999px",
+              fontSize: "11px",
+              fontWeight: 600,
+              background: "rgba(16,185,129,0.2)",
+              color: "#6EE7B7",
+              border: "1px solid rgba(16,185,129,0.3)",
+            }}
+          >
+            ● Live
           </span>
         </div>
         {/* Hover overlay */}
-        <div className="project-overlay absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 flex items-end p-4">
-          <span className="text-white/80 text-sm flex items-center gap-1">
-            View details <ChevronRight className="w-4 h-4" />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.6), transparent)",
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.3s ease",
+            display: "flex",
+            alignItems: "flex-end",
+            padding: "12px 16px",
+          }}
+        >
+          <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "13px", display: "flex", alignItems: "center", gap: "4px" }}>
+            View details →
           </span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <h3 className="font-bold text-foreground text-lg mb-2 group-hover:text-violet-300 transition-colors">
+      {/* Card body */}
+      <div style={{ padding: "20px", display: "flex", flexDirection: "column", flex: 1 }}>
+        <h3
+          style={{
+            fontWeight: 700,
+            fontSize: "16px",
+            color: hovered ? "#C4B5FD" : "#F9FAFB",
+            margin: "0 0 8px 0",
+            transition: "color 0.2s ease",
+          }}
+        >
           {project.title}
         </h3>
-        <p className="text-sm text-foreground/55 leading-relaxed mb-4 line-clamp-2">
+        <p
+          style={{
+            fontSize: "13px",
+            color: "rgba(249,250,251,0.5)",
+            lineHeight: 1.65,
+            margin: "0 0 16px 0",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
           {project.description}
         </p>
 
-        {/* Tech stack */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        {/* Tech badges */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "16px" }}>
           {project.tech.slice(0, 4).map((tech) => (
-            <Badge key={tech} variant="primary">{tech}</Badge>
+            <span
+              key={tech}
+              style={{
+                padding: "2px 8px",
+                borderRadius: "6px",
+                fontSize: "11px",
+                fontWeight: 500,
+                background: "rgba(124,58,237,0.12)",
+                color: "#C4B5FD",
+                border: "1px solid rgba(124,58,237,0.2)",
+              }}
+            >
+              {tech}
+            </span>
           ))}
           {project.tech.length > 4 && (
-            <Badge variant="default">+{project.tech.length - 4}</Badge>
+            <span
+              style={{
+                padding: "2px 8px",
+                borderRadius: "6px",
+                fontSize: "11px",
+                fontWeight: 500,
+                background: "rgba(255,255,255,0.05)",
+                color: "rgba(249,250,251,0.4)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              +{project.tech.length - 4}
+            </span>
           )}
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "auto" }}>
           <a
             href={project.github}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 text-xs text-foreground/50 hover:text-foreground transition-colors"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              fontSize: "12px",
+              color: "rgba(249,250,251,0.45)",
+              textDecoration: "none",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#F9FAFB")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(249,250,251,0.45)")}
           >
             <GithubIcon className="w-3.5 h-3.5" />
             Code
           </a>
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 text-xs text-foreground/50 hover:text-accent transition-colors"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            Live Demo
-          </a>
+          {project.demo && project.demo !== project.github && (
+            <a
+              href={project.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                fontSize: "12px",
+                color: "rgba(249,250,251,0.45)",
+                textDecoration: "none",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#06B6D4")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(249,250,251,0.45)")}
+            >
+              <ExternalLink style={{ width: "14px", height: "14px" }} />
+              Live Demo
+            </a>
+          )}
         </div>
       </div>
     </motion.div>
   );
 }
 
-/**
- * Project detail modal
- */
-function ProjectModal({
-  project,
-  onClose,
-}: {
-  project: Project;
-  onClose: () => void;
-}) {
+// ── Project Modal ─────────────────────────────────────────────
+function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+      }}
       onClick={onClose}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }} />
 
-      {/* Modal */}
       <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.92, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        exit={{ scale: 0.92, opacity: 0, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="relative w-full max-w-2xl glass-strong rounded-2xl border border-white/12 overflow-hidden max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "640px",
+          background: "rgba(10,10,20,0.95)",
+          backdropFilter: "blur(20px)",
+          borderRadius: "20px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          overflow: "hidden",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
       >
-        {/* Header gradient */}
-        <div className={`h-48 bg-gradient-to-br ${project.gradient} relative`}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-8xl font-black text-white/5 select-none">
-              {project.title.charAt(0)}
-            </div>
+        {/* Header */}
+        <div
+          style={{
+            height: "180px",
+            background: `linear-gradient(135deg, ${project.gradient.includes("violet") ? "rgba(124,58,237,0.4)" : project.gradient.includes("cyan") ? "rgba(6,182,212,0.4)" : project.gradient.includes("emerald") ? "rgba(16,185,129,0.4)" : "rgba(236,72,153,0.4)"}, rgba(0,0,0,0.2))`,
+            position: "relative",
+          }}
+        >
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "100px", fontWeight: 900, color: "rgba(255,255,255,0.04)", userSelect: "none" }}>
+            {project.title.charAt(0)}
           </div>
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-xl bg-black/30 text-white/70 hover:text-white hover:bg-black/50 transition-all"
+            style={{ position: "absolute", top: "16px", right: "16px", padding: "8px", borderRadius: "10px", background: "rgba(0,0,0,0.4)", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}
           >
-            <X className="w-4 h-4" />
+            <X style={{ width: "16px", height: "16px" }} />
           </button>
-          <div className="absolute bottom-4 left-6">
-            <span className={`px-2.5 py-1 rounded-full text-xs font-medium border
-              ${project.status === "live"
-                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                : "bg-amber-500/20 text-amber-300 border-amber-500/30"
-              }`}>
-              {project.status === "live" ? "● Live" : "⚡ WIP"}
+          <div style={{ position: "absolute", bottom: "16px", left: "24px" }}>
+            <span style={{ padding: "3px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: 600, background: "rgba(16,185,129,0.2)", color: "#6EE7B7", border: "1px solid rgba(16,185,129,0.3)" }}>
+              ● Live
             </span>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-5">
+        {/* Body */}
+        <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">{project.title}</h2>
-            <p className="text-foreground/65 leading-relaxed">{project.longDescription}</p>
+            <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#F9FAFB", margin: "0 0 8px 0" }}>{project.title}</h2>
+            <p style={{ fontSize: "14px", color: "rgba(249,250,251,0.6)", lineHeight: 1.7, margin: 0 }}>{project.longDescription}</p>
           </div>
 
           {/* Tech stack */}
           <div>
-            <h4 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">Tech Stack</h4>
-            <div className="flex flex-wrap gap-2">
+            <h4 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(249,250,251,0.35)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px 0" }}>Tech Stack</h4>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {project.tech.map((tech) => (
-                <Badge key={tech} variant="primary">{tech}</Badge>
+                <span key={tech} style={{ padding: "3px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: 500, background: "rgba(124,58,237,0.12)", color: "#C4B5FD", border: "1px solid rgba(124,58,237,0.2)" }}>
+                  {tech}
+                </span>
               ))}
             </div>
           </div>
 
           {/* Features */}
           <div>
-            <h4 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">Key Features</h4>
-            <div className="grid sm:grid-cols-2 gap-2">
+            <h4 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(249,250,251,0.35)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 12px 0" }}>Key Features</h4>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "8px" }}>
               {project.features.map((feature) => (
-                <div key={feature} className="flex items-start gap-2 text-sm text-foreground/65">
-                  <Zap className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
+                <div key={feature} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "rgba(249,250,251,0.65)" }}>
+                  <Zap style={{ width: "13px", height: "13px", color: "#7C3AED", marginTop: "2px", flexShrink: 0 }} />
                   {feature}
                 </div>
               ))}
@@ -197,13 +324,15 @@ function ProjectModal({
           </div>
 
           {/* CTA */}
-          <div className="flex gap-3 pt-2">
+          <div style={{ display: "flex", gap: "12px", paddingTop: "4px" }}>
             <Button variant="primary" size="md" href={project.github} external icon={<GithubIcon className="w-4 h-4" />}>
               View Code
             </Button>
-            <Button variant="secondary" size="md" href={project.demo} external icon={<ExternalLink className="w-4 h-4" />}>
-              Live Demo
-            </Button>
+            {project.demo && project.demo !== project.github && (
+              <Button variant="secondary" size="md" href={project.demo} external icon={<ExternalLink className="w-4 h-4" />}>
+                Live Demo
+              </Button>
+            )}
           </div>
         </div>
       </motion.div>
@@ -211,70 +340,65 @@ function ProjectModal({
   );
 }
 
-/**
- * Projects section with bento grid layout and expandable modals
- */
+// ── Section ───────────────────────────────────────────────────
 export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
-    <section id="projects" className="section-padding relative">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute w-[600px] h-[600px] rounded-full opacity-10"
-          style={{
-            background: "radial-gradient(circle, #7C3AED, transparent 70%)",
-            left: "-15%",
-            bottom: "0%",
-            filter: "blur(100px)",
-          }}
-        />
-      </div>
+    <section id="projects" style={{ padding: "96px 0", position: "relative" }}>
+      {/* Background glow */}
+      <div
+        style={{
+          position: "absolute",
+          left: "-15%",
+          bottom: "0",
+          width: "600px",
+          height: "600px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(124,58,237,0.07), transparent 70%)",
+          filter: "blur(100px)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 32px", position: "relative" }}>
         <SectionHeader
           eyebrow="Projects"
           title="Things I've"
           titleHighlight="built"
-          description="A selection of projects that showcase my skills in backend engineering, full-stack development, and AI integration."
+          description="A selection of projects that showcase my skills in full-stack development, real-time systems, and AI integration."
+          align="center"
         />
 
-        {/* Bento grid */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        {/* 2×2 grid */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(440px, 1fr))",
+            gap: "20px",
+          }}
         >
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
               onOpen={setSelectedProject}
-              featured={i === 0}
             />
           ))}
-        </motion.div>
+        </div>
 
         {/* GitHub CTA */}
-        <motion.div
-          variants={scaleIn}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mt-12 text-center"
-        >
+        <div style={{ marginTop: "48px", display: "flex", justifyContent: "center" }}>
           <Button
             variant="outline"
             size="lg"
-            href="https://github.com/ankitsingh"
+            href="https://github.com/Exploreankit"
             external
             icon={<GithubIcon className="w-4 h-4" />}
           >
             View All Projects on GitHub
           </Button>
-        </motion.div>
+        </div>
       </div>
 
       {/* Modal */}

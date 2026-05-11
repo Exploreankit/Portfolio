@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Monitor, Server, Database, Cloud, Brain, Wrench } from "lucide-react";
-import { staggerContainer, fadeInUp, scaleIn } from "@/animations/variants";
+import { staggerContainer, fadeInUp } from "@/animations/variants";
 import { skillCategories } from "@/data";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -15,39 +15,51 @@ const categoryIcons: Record<string, React.ElementType> = {
   Wrench,
 };
 
-/**
- * Skills section with categorized animated skill cards and progress bars
- */
+const floatingTags = [
+  "Node.js", "React", "TypeScript", "NestJS", "MySQL",
+  "MongoDB", "PostgreSQL", "Redis", "Docker", "AWS",
+  "Python", "Socket.IO", "JWT", "REST APIs", "Next.js",
+  "TypeORM", "Prisma", "Firebase", "Razorpay", "OpenAI",
+];
+
 export default function SkillsSection() {
   return (
-    <section id="skills" className="section-padding relative">
+    <section id="skills" style={{ padding: "96px 0", position: "relative" }}>
       {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute w-[500px] h-[500px] rounded-full opacity-10"
-          style={{
-            background: "radial-gradient(circle, #06B6D4, transparent 70%)",
-            right: "-10%",
-            top: "20%",
-            filter: "blur(80px)",
-          }}
-        />
-      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: "-10%",
+          top: "20%",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(6,182,212,0.08), transparent 70%)",
+          filter: "blur(80px)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 32px", position: "relative" }}>
         <SectionHeader
           eyebrow="Skills"
           title="Technologies I"
           titleHighlight="work with"
           description="A curated set of tools and technologies I use to build modern, scalable applications."
+          align="center"
         />
 
+        {/* Skills grid */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          viewport={{ once: true, margin: "-80px" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "20px",
+          }}
         >
           {skillCategories.map((category) => {
             const Icon = categoryIcons[category.icon] || Monitor;
@@ -55,39 +67,86 @@ export default function SkillsSection() {
               <motion.div
                 key={category.category}
                 variants={fadeInUp}
-                className="group relative glass rounded-2xl p-6 border border-white/06 hover:border-white/12 transition-all duration-300 skill-card"
+                style={{
+                  position: "relative",
+                  background: "rgba(255,255,255,0.03)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  borderRadius: "16px",
+                  padding: "24px",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  transition: "border-color 0.3s ease, transform 0.3s ease",
+                  overflow: "hidden",
+                }}
+                whileHover={{
+                  borderColor: `${category.color}40`,
+                  y: -4,
+                  transition: { duration: 0.2 },
+                }}
               >
+                {/* Hover glow */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "16px",
+                    background: `radial-gradient(circle at 50% 0%, ${category.color}08, transparent 70%)`,
+                    pointerEvents: "none",
+                  }}
+                />
+
                 {/* Category header */}
-                <div className="flex items-center gap-3 mb-5">
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center"
                     style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       backgroundColor: `${category.color}15`,
                       border: `1px solid ${category.color}30`,
+                      flexShrink: 0,
                     }}
                   >
-                    <Icon className="w-4.5 h-4.5" style={{ color: category.color }} />
+                    <Icon style={{ width: "18px", height: "18px", color: category.color }} />
                   </div>
-                  <h3 className="font-semibold text-foreground">{category.category}</h3>
+                  <h3 style={{ fontWeight: 600, color: "#F9FAFB", fontSize: "15px", margin: 0 }}>
+                    {category.category}
+                  </h3>
                 </div>
 
                 {/* Skills list */}
-                <div className="space-y-3">
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {category.skills.map((skill) => (
-                    <div key={skill.name} className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base leading-none">{skill.icon}</span>
-                          <span className="text-sm text-foreground/80 font-medium">{skill.name}</span>
+                    <div key={skill.name} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {/* Skill name + level */}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <span style={{ fontSize: "14px", lineHeight: 1 }}>{skill.icon}</span>
+                          <span style={{ fontSize: "13.5px", color: "rgba(249,250,251,0.8)", fontWeight: 500 }}>
+                            {skill.name}
+                          </span>
                         </div>
-                        <span className="text-xs text-foreground/40">{skill.level}%</span>
+                        <span style={{ fontSize: "11px", color: "rgba(249,250,251,0.35)" }}>
+                          {skill.level}%
+                        </span>
                       </div>
                       {/* Progress bar */}
-                      <div className="h-1 bg-white/05 rounded-full overflow-hidden">
+                      <div
+                        style={{
+                          height: "3px",
+                          background: "rgba(255,255,255,0.06)",
+                          borderRadius: "999px",
+                          overflow: "hidden",
+                        }}
+                      >
                         <motion.div
-                          className="h-full rounded-full"
                           style={{
-                            background: `linear-gradient(90deg, ${category.color}, ${category.color}80)`,
+                            height: "100%",
+                            borderRadius: "999px",
+                            background: `linear-gradient(90deg, ${category.color}, ${category.color}70)`,
                           }}
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.level}%` }}
@@ -98,43 +157,51 @@ export default function SkillsSection() {
                     </div>
                   ))}
                 </div>
-
-                {/* Hover glow */}
-                <div
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(circle at 50% 0%, ${category.color}10, transparent 70%)`,
-                  }}
-                />
               </motion.div>
             );
           })}
         </motion.div>
 
-        {/* Floating skill badges */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mt-12 flex flex-wrap justify-center gap-3"
+        {/* Floating skill tags */}
+        <div
+          style={{
+            marginTop: "48px",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "10px",
+          }}
         >
-          {[
-            "Node.js", "React", "TypeScript", "NestJS", "MongoDB",
-            "PostgreSQL", "Redis", "Docker", "AWS", "Python",
-            "TensorFlow", "Socket.IO", "JWT", "REST APIs", "Next.js",
-          ].map((tech, i) => (
+          {floatingTags.map((tech) => (
             <motion.span
               key={tech}
-              variants={scaleIn}
-              custom={i}
-              className="px-3 py-1.5 rounded-full text-xs font-medium glass border border-white/08 text-foreground/60 hover:text-foreground hover:border-primary/30 transition-all duration-200 cursor-default"
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.06, y: -2 }}
+              style={{
+                padding: "5px 14px",
+                borderRadius: "999px",
+                fontSize: "12px",
+                fontWeight: 500,
+                background: "rgba(255,255,255,0.04)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "rgba(249,250,251,0.55)",
+                cursor: "default",
+                transition: "color 0.2s ease, border-color 0.2s ease",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "#F9FAFB";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(249,250,251,0.55)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
+              }}
             >
               {tech}
             </motion.span>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -197,6 +197,8 @@ body {
   content: "|";
   animation: blink 1s step-end infinite;
   color: #7C3AED;
+  font-weight: 300;
+  margin-left: 1px;
 }
 
 @keyframes blink {
